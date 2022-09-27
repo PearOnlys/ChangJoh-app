@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreign('deck_id')->references('id')->on('decks')->onDelete('cascade');
             $table->unsignedBigInteger('card_id');
             $table->foreign('card_id')->references('id')->on('cards')->onDelete('cascade');
+            $table->unsignedBigInteger('card_order')->nullable();
+            $table->boolean('is_hidden')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

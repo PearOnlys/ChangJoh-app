@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -22,9 +24,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'mobile',
-        'password',
+        'password'
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -43,37 +44,34 @@ class User extends Authenticatable
     protected $casts = [
         'mobile_verified_at' => 'datetime',
     ];
+    public static function validation($id,$note = null)
+    {
+        $rules = [];
+        if (!$id) {
+            if ($note == 'reg') {
+                $rules['mobile'] = ['required','size:10','unique:users,mobile'];
+            } elseif ($note == 'login') {
+                $rules['mobile'] = ['required','size:10','exists:users,mobile'];
+            }
+        } else {
+            //edit
+            $rules['mobile'] = ['size:10',Rule::unique('users','mobile')->ignore($id)];
+        }
+        return $rules;
+    }
 
     public function findForPassport($username)
     {
         return $this->where('mobile', $username)->first();
     }
-
-    static $rulesLogin = [
-        'mobile' => 'required|size:10',
-        'password' => 'required|min:6',
-    ];
-    static $rulesNew = [
-        'name' => 'required|max:255',
-        'mobile' => 'size:10|required|unique:users,mobile',
-        'password' => 'required|min:6'
-    ];
-    static $rulesMobile = [
-        'mobile' => 'exists:users,mobile|required|size:10',
-    ];
-
-    public static function validation($id = null)
+    public function validateForPassportPasswordGrant($password)
     {
-        $rules =[];
-        if (!$id) {
-            $rules['name'] = ['unique:users,name','max:255'];
-            $rules['mobile'] = ['require','unique:users,mobile'];
-            $rules['password'] = ['require','min:6'];
-        } else {
-            $rules['name'] = ['unique:users,name,'.$id];
-            $rules['mobile'] = ['unique:users,mobile,'.$id];
-            $rules['password'] = ['min:6'];
-        }
-        return $rules;
+        return true;
+    }
+    
+    /* Relation */
+    public function profiles()
+    {
+        return $this->hasMany(Profile::class);
     }
 }

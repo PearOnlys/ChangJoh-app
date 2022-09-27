@@ -15,7 +15,13 @@ return new class extends Migration
     {
         Schema::create('decks', function (Blueprint $table) {
             $table->id();
-            $table->text('name');
+            $table->string('name');
+            $table->boolean('is_global')->default(false);
+            $table->boolean('is_hidden')->default(false);
+            $table->unsignedBigInteger('profile_id')->nullable();
+            $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('cascade');
+            $table->text('image_path')->nullable();
+            $table->unsignedBigInteger('deck_order')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
