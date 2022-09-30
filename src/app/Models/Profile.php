@@ -62,7 +62,7 @@ class Profile extends Model
     }
     public function patientTypes()
     {
-        return $this->belongsTo(Patient_type::class);
+        return $this->belongsTo(PatientType::class);
     }
     public function cards()
     {

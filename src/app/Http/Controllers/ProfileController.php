@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DeckResource;
 use App\Http\Resources\ProfileResource;
-use App\Models\Patient_type;
 use App\Models\PatientType;
 use App\Models\Profile;
 use Carbon\Carbon;

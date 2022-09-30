@@ -18,13 +18,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::factory(1)->create();
-        \App\Models\Patient_type::factory(10)->create();
+        // \App\Models\User::factory(1)->create();
+        \App\Models\PatientType::factory(10)->create();
         \App\Models\Card::factory(20)->create();
         \App\Models\Deck::factory(10)->create();
 
         //pivot deck_patienttype
-        $types = \App\Models\Patient_type::all();
+        $types = \App\Models\PatientType::all();
         \App\Models\Deck::all()->each(function ($deck) use ($types){
             $deck->patienttypes()->attach(
                 $types->random(rand(1,3))->pluck('id')->toArray()
