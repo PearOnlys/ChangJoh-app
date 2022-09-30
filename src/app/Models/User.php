@@ -59,6 +59,15 @@ class User extends Authenticatable
         }
         return $rules;
     }
+    
+    static $msg = [
+        'required' => 'The :attribute field is required.',
+        'unique' => 'The :attribute field must be unique.',
+        'max' => 'The :attribute must be smaller than :max.',
+        'exists' => 'The :attribute must exists.',
+        'mimes' => 'The :attribute must be :mimes.'
+    ];
+
 
     public function findForPassport($username)
     {

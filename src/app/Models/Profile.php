@@ -21,13 +21,22 @@ class Profile extends Model
         'image_path',
         'user_id',
     ];
+
+    public function getImagepathAttribute($image_path){
+        if (!empty($image_path)){
+            return '/storage/'.$image_path;
+        } else {
+            return $image_path;
+        }
+    }
+    
     public static function validation($id = null)
     {
-        $rules =[];
+        $rules = [];
         if (!$id) {
             $rules['name'] = ['required', 'max:255', Rule::unique('profiles','name')->where(fn ($query) => $query->where('user_id',Auth::user()->id))];
             $rules['type_id'] = ['required', 'exists:patient_types,id'];
-            $rules['image'] = ['image', 'mimes:jpg,png,jpeg,gif,svg,webp'];
+            $rules['image'] = ['required', 'image', 'mimes:jpg,png,jpeg,gif,svg,webp'];
         } else {
             $rules['name'] = ['max:255', Rule::unique('profiles','name')->ignore($id)->where(fn ($query) => $query->where('user_id',Auth::user()->id))];
             $rules['type_id'] = ['exists:patient_types,id'];
@@ -35,6 +44,13 @@ class Profile extends Model
         }
         return $rules;
     }
+    static $msg = [
+        'required' => 'The :attribute field is required.',
+        'unique' => 'The :attribute field must be unique.',
+        'max' => 'The :attribute must be smaller than :max.',
+        'exists' => 'The :attribute must exists.',
+        'mimes' => 'The :attribute must be :mimes.'
+    ];
     
     public function user()
     {

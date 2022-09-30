@@ -28,46 +28,45 @@ endpoints:
         name: name
         description: name
         required: true
-        example: veritatis
+        example: est
         type: string
         custom: []
       type_ids:
         name: type_ids
         description: type_ids
         required: true
-        example: omnis
+        example: veniam
         type: string
         custom: []
       image:
         name: image
         description: 'image mimes:jpg,png,jpeg,gif,svg,webp'
         required: true
-        example: est
+        example: soluta
         type: image
         custom: []
     cleanBodyParameters:
-      name: veritatis
-      type_ids: omnis
-      image: est
+      name: est
+      type_ids: veniam
+      image: soluta
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-             "profile": {
-                 "id": 9,
-                 "name": "Eddy",
-                 "patient_type": "4",
-                 "decks": [
-                     {
-                         "id": 22
-                     },
-                     {
-                         "id": 23
-                     },
-                 ]
-             },
+               "profile": {
+                 "name": "Merry",
+                 "type": "4",
+                 "image": "public/storage/images/profiles/2022092706461.jpg"
+               },
+               "decks": [
+                   {
+                       "id": 32,
+                       "name": "non",
+                       "#cards": 8
+                   }
+               ],
              "success": true
           }
         headers: []
@@ -107,15 +106,11 @@ endpoints:
         status: 200
         content: |-
           {
-             "profile list": [
+             "profiles": [
                  {
-                     "id": 1,
-                     "user_id": 1,
                      "name": "Emmy",
-                     "image_path": "images/profiles/202209221207alert.png",
-                     "created_at": "2022-09-21T09:29:04.000000Z",
-                     "updated_at": "2022-09-22T12:07:12.000000Z",
-                     "deleted_at": null
+                     "type": 4,
+                     "image_path": "public/storage/images/profiles/202209221207alert.png"
                  }
              }
         headers: []
@@ -164,10 +159,9 @@ endpoints:
         content: |-
           {
              "profile": {
-                 "id": 1,
                  "name": "Emmy",
-                 "image": "images/profiles/202209221207alert.png",
-                 "patient_type": 4
+                 "type": 4,
+                 "image_path": "public/storage/images/profiles/202209221207alert.png"
              }
           }
         headers: []
@@ -212,43 +206,37 @@ endpoints:
         name: name
         description: ''
         required: false
-        example: qui
+        example: impedit
         type: string
         custom: []
       type_id:
         name: type_id
         description: ''
         required: false
-        example: et
+        example: repellendus
         type: string
         custom: []
       image:
         name: image
         description: 'mimes:jpg,png,jpeg,gif,svg,webp'
         required: false
-        example: saepe
+        example: ducimus
         type: image
         custom: []
     cleanBodyParameters:
-      name: qui
-      type_id: et
-      image: saepe
+      name: impedit
+      type_id: repellendus
+      image: ducimus
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-             "profile": {
+               "profile": {
                  "name": "Merry",
-                 "id": 6,
-                 "user_id": 1,
-                 "patient_type": "4",
-                 "decks": [
-                       {
-                           "id": 11
-                       }
-                   ]
+                 "type": "4",
+                 "image": "public/storage/images/profiles/2022092706461.jpg"
                },
                "success": true
           }

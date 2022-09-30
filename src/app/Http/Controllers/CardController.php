@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CardResource;
+use App\Http\Resources\DeckResource;
 use App\Models\Card;
 use App\Models\Deck;
 use App\Models\Image;
@@ -20,25 +22,30 @@ class CardController extends Controller
      *    "card": {
      *        "id": 35,
      *        "word": "MerryWaether",
-     *        "image_path": "images/cards/202209230745imagefilejpg.jpg",
-     *        "audio_path": "audio/cards/202209230821audiofileMP3.mp3"
+     *        "is_hidden": 0,
+     *        "image_path": "public/storage/images/cards/202209230745imagefilejpg.jpg",
+     *        "audio_path": "public/storage/audios/cards/202209230821audiofileMP3.mp3"
      *    }
      * }
      */
     public function show($deck, $id)
     {
-        $card = Card::findOrFail($id);
-        $profile = Deck::find($deck)->get()->last()->profile;
+        $result = [];
+        $card = Deck::find($deck)->cards()->wherePivot('card_id', '=', $id)->get()->last();
+        $profile = Deck::find($deck)->profile()->get()->last();
         $image = $card->profiles()->where('profile_id', '=', $profile->id)->get()->last()->pivot->image_path;
         $audio = $card->profiles()->where('profile_id', '=', $profile->id)->get()->last()->pivot->audio_path;
-        if ($image) $card['image_path'] = $image;
-        if ($audio) $card['audio_path'] = $audio;
-        $result['card'] = array(
-            "card_id" => $card->id,
-            'word' => $card->word,
-            'image_path' => $card->image_path,
-            'audio_path' => $card->audio_path
-        );
+        if (!$image) {
+            $card['image_path'] = $card->image_path;
+        } else {
+            $card['image_path'] = $image;
+        }
+        if (!$audio) {
+            $card['audio_path'] = $card->audio_path;
+        } else {
+            $card['audio_path'] = $audio;
+        }
+        $result['card'] = new CardResource($card);
         return response($result);
     }
     /**
@@ -50,14 +57,19 @@ class CardController extends Controller
      * 
      * @response {
      *    "card": {
-     *        "word": "Merry",
-     *        "is_global": false,
-     *        "image_path": "images/cards/202209230745login-register.jpg",
-     *        "audio_path": "audio/cards/202209230821audiofileMP3.mp3",
-     *        "updated_at": "2022-09-23T07:45:31.000000Z",
-     *        "created_at": "2022-09-23T07:45:31.000000Z",
-     *        "id": 22
+     *        "id": 35,
+     *        "word": "MerryWaether",
+     *        "is_hidden": 0,
+     *        "image_path": "public/storage/images/cards/202209230745imagefilejpg.jpg",
+     *        "audio_path": "public/storage/audios/cards/202209230821audiofileMP3.mp3"
      *    },
+     *    "deck": {
+     *        "id": 35,
+     *        "name": "MerryWaether",
+     *        "is_hidden": 0,
+     *        "image_path": "public/storage/images/cards/202209230745imagefilejpg.jpg",
+     *        "#cards": 9
+     *    }
      *    "success": true
      * }
      */
@@ -65,20 +77,21 @@ class CardController extends Controller
     {
         $deck = Deck::find($deck);
         $profile = $deck->profile()->get()->last();
-        $valiadtor = Validator::make($request->all(), Card::validation(null));
+        $valiadtor = Validator::make($request->all(), Card::validation(null), Card::$msg);
         if ($valiadtor->fails()) {
+            $result['error'] = $valiadtor->messages();
             $result['success'] = false;
         } else {
             $card = new Card();
             $card->fill($request->only(['word']));
             $card->is_global = false;
-            if ($request->image) {
+            if (!empty($request->image)) {
                 $fileImg = $request->file('image');
                 $filenameImg = date('YmdHi') . $fileImg->getClientOriginalName();
                 $pathImg = Storage::putFileAs('images/cards', $fileImg, $filenameImg);
                 $card->image_path = $pathImg;
             }
-            if ($request->audio) {
+            if (!empty($request->audio)) {
                 $fileAudio = $request->file('audio');
                 $filenameAudio = date('YmdHi') . $fileAudio->getClientOriginalName();
                 $pathAudio = Storage::putFileAs('audios/cards', $fileAudio, $filenameAudio);
@@ -89,7 +102,9 @@ class CardController extends Controller
             $card_ordering = $deck->cards()->max('card_order') + 1;
             $deck->cards()->attach($card, ['card_order' => $card_ordering, 'is_hidden' => false]);
             $profile->cards()->sync($card, false);
-            $result['card'] = $card;
+
+            $result['card'] = new CardResource($deck->cards()->get()->last());
+            $result['deck'] = new DeckResource($deck);
             $result['success'] = true;
         }
         return response($result);
@@ -103,8 +118,8 @@ class CardController extends Controller
      * @response {
      *    "card": {
      *        "id": 35,
-     *        "is_global": false,
      *        "word": "MerryWaether",
+     *        "is_hidden": 0,
      *        "image_path": "images/cards/202209230745imagefilejpg.jpg",
      *        "audio_path": "audio/cards/202209230821audiofileMP3.mp3"
      *    },
@@ -116,47 +131,36 @@ class CardController extends Controller
         $profile = Deck::find($deck)->profile()->get()->last();
         $valiadtor = Validator::make($request->all(), Card::validation($id));
         if ($valiadtor->fails()) {
+            $result['error'] = $valiadtor->messages();
             $result['success'] = false;
         } else {
             $card = Card::find($id);
             $pathAudio = null;
             $pathImg = null;
-            if ($request->image != null) {
+            if (!empty($request->image)) {
                 $fileImg = $request->file('image');
                 $filenameImg = date('YmdHi') . $fileImg->getClientOriginalName();
                 $pathImg = Storage::putFileAs('images/cards', $fileImg, $filenameImg);
             }
-            if ($request->audio != null) {
+            if (!empty($request->audio)) {
                 $fileAudio = $request->file('audio');
                 $filenameAudio = date('YmdHi') . $fileAudio->getClientOriginalName();
                 $pathAudio = Storage::putFileAs('audios/cards', $fileAudio, $filenameAudio);
             }
+
             if ($card->is_global) {
                 $pivot = $card->profiles()->where('profile_id', '=', $profile->id)->get()->last()->pivot;
                 $pivot->image_path = $pathImg;
                 $pivot->audio_path = $pathAudio;
                 $pivot->save();
-                $result['card'] = array(
-                    'id' => $card->id,
-                    'is_global' => true,
-                    'word' => $card->word,
-                    'image_path' => $pivot->image_path,
-                    'audio_path' => $pivot->audio_path
-                );
             } else {
                 $card->image_path = $pathImg;
                 $card->audio_path = $pathAudio;
                 $card->word = $request->word;
                 $card->save();
-                $result['card'] = $card;
-                $result['card'] = array(
-                    'id' => $card->id,
-                    'is_global' => false,
-                    'word' => $card->word,
-                    'image_path' => $card->image_path,
-                    'audio_path' => $card->audio_path
-                );
             }
+            $updated = Deck::find($deck)->cards()->wherePivot('card_id', '=', $id)->get()->last();
+            $result['card'] = new CardResource($updated);
             $result['success'] = true;
         }
         return response($result);

@@ -242,11 +242,7 @@ endpoints:
           {
             "user": {
                 "id": 1,
-                "mobile": "0873000207",
-                "mobile_verified_at": "2022-09-21T09:29:03.000000Z",
-                "created_at": "2022-09-21T09:29:04.000000Z",
-                "updated_at": "2022-09-21T09:29:04.000000Z",
-                "deleted_at": null
+                "mobile": "0873000207"
             }
           }
         headers: []
@@ -267,7 +263,7 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Update user'
+      title: 'Edit user (mobile)'
       description: ''
       authenticated: true
       custom: []
@@ -283,11 +279,11 @@ endpoints:
         name: mobile
         description: ''
         required: false
-        example: blanditiis
+        example: aspernatur
         type: string
         custom: []
     cleanBodyParameters:
-      mobile: blanditiis
+      mobile: aspernatur
     fileParameters: []
     responses:
       -
@@ -296,11 +292,7 @@ endpoints:
           {
              "user": {
                  "id": 1,
-                 "mobile": "0873040207",
-                 "mobile_verified_at": "2022-09-21T09:29:03.000000Z",
-                 "created_at": "2022-09-21T09:29:04.000000Z",
-                 "updated_at": "2022-09-23T05:23:46.000000Z",
-                 "deleted_at": null
+                 "mobile": "0873040208"
              },
              "success": true
           }

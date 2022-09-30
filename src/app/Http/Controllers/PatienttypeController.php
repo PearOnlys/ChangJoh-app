@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PatientTypeResource;
 use App\Models\Patienttype;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -23,8 +24,7 @@ class PatienttypeController extends Controller
     public function index()
     {
         $result = [];
-        $types = Patienttype::orderBy('name','asc')->get(['id','name']);
-        $result['types'] = $types;
+        $result['types'] = PatientTypeResource::collection(Patienttype::orderBy('name','asc')->get(['id','name']));
         return response($result);
     }
     /**
@@ -41,16 +41,14 @@ class PatienttypeController extends Controller
     public function store(Request $request)
     {
         $result = [];
-        $validate = Validator::make($request->all(), Patienttype::$rules);
+        $validate = Validator::make($request->all(), Patienttype::$rules, Patienttype::$msg);
         if($validate->fails()){
+            $result['error'] = $validate->messages();
             $result['success'] = false;
         } else {
             $type = $this->create($request->only('name'));
             $type->save();
-            $result['type'] = array(
-                'id' => $type->id,
-                'name' => $type->name
-            );
+            $result['type'] = new PatientTypeResource($type);
             $result['success'] = true;
         }
         return response($result);

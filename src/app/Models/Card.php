@@ -20,6 +20,26 @@ class Card extends Model
         'image_path',
         'global'
     ];
+    
+    protected $casts = [
+        'is_hidden' => 'boolean'
+    ];
+
+    public function getImagepathAttribute($image_path){
+        if (!empty($image_path)){
+            return '/storage/'.$image_path;
+        } else {
+            return $image_path;
+        }
+    }
+
+    public function getAudiopathAttribute($audio_path){
+        if (!empty($audio_path)){
+            return '/storage/'.$audio_path;
+        } else {
+            return $audio_path;
+        }
+    }
 
     static $rulesNew = [
         'word' => 'required|max:255',
@@ -41,6 +61,14 @@ class Card extends Model
         }
         return $rules;
     }
+    
+    static $msg = [
+        'required' => 'The :attribute field is required.',
+        'unique' => 'The :attribute field must be unique.',
+        'max' => 'The :attribute must be smaller than :max.',
+        'exists' => 'The :attribute must exists.',
+        'mimes' => 'The :attribute must be :mimes.'
+    ];
 
     public function image()
     {

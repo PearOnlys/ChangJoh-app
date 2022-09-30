@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProfileResource;
 use App\Models\Deck;
 use App\Models\DeckProfile;
 use App\Models\Profile;
@@ -22,13 +23,14 @@ class DeckProfileController extends Controller
     {
         $result = [];
         if (gettype($request->profile_ids) != 'array') $request['profile_ids'] = explode(',', $request->profile_ids);
-
+        
         $deck = Deck::find($deck_id);
         foreach ($request->profile_ids as $prof_id) {
-            $profile = Profile::find($prof_id);
-            $validator_deck = Validator::make($deck->only(['name', 'image_path']), Deck::validation(null, $prof_id));
-            if ($validator_deck->fails()) {
-                $result['success'][$prof_id] = false;
+            $profile = Profile::findOrFail($prof_id);
+            $validator = Validator::make($deck->only(['name']), Deck::copyValidation($prof_id), Deck::$msg);
+            if ($validator->fails()) {
+                $result['success'] = false;
+                $result['error'] = $validator->messages();
             } else {
                 $newdeck = $deck->replicate();
                 $newdeck->is_global = false;
@@ -39,18 +41,14 @@ class DeckProfileController extends Controller
                 $newdeck->save();
 
                 $card_ordering = 0;
-                if (!$deck->cards) {
-                    //no card in deck
-                } else {
-                    foreach ($deck->cards as $card) {
-                        $card_ordering = $card_ordering + 1;
-                        $newdeck->cards()->attach($card, ['card_order' => $card_ordering]);
-                        $profile->cards()->sync($card);
-                        $profile->save();
-                        $newdeck->save();
-                    }
+                foreach ($deck->cards as $card) {
+                    $card_ordering = $card_ordering + 1;
+                    $newdeck->cards()->attach($card, ['card_order' => $card_ordering]);
+                    $newdeck->save();
+                    $profile->cards()->sync($card,false);
+                    $profile->save();
                 }
-                $result['profile'][$prof_id] = $profile->name;
+                $result['profile'][$prof_id] = new ProfileResource($profile);
                 $result['success'][$prof_id] = true;
             }
         }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CardResource;
 use App\Models\Card;
 use App\Models\Deck;
 use App\Models\Profile;
@@ -18,10 +19,11 @@ class CardDeckController extends Controller
      * @response {
      *    "cards": [
      *        {
-     *            "card_id": 8,
+     *            "id": 8,
      *            "word": "voluptatem",
-     *            "image_path": null,
-     *            "audio_path": null,
+     *            "is_hidden": 0
+     *            "image_path": "public/storage/images/cards/202209260915image.png",
+     *            "audio_path": "public/storage/audios/cards/202209260915audiofile.mp3"
      *        }
      *    ],
      *    "success": true
@@ -30,38 +32,21 @@ class CardDeckController extends Controller
     public function index_show($deck)
     {
         $result = [];
-        $ordered = [];
-        $queue = [];
-        $deck = Deck::findOrFail($deck);
-        $profile = $deck->profile()->get()->last();
-        $ordered = $deck->cards()->wherePivot('card_order', '!=', null)->orderBy('card_order', 'asc')->get();
-        $queue = $deck->cards()->wherePivot('card_order', '=', null)->orderBy('id', 'asc')->get();
+        $cards = [];
 
-        if (count($ordered) == 0) {
-            $reorder = 0;
-        } else {
-            $reorder = $ordered->last()->pivot->card_order;
-        }
-        foreach ($queue as $que) {
-            $reorder = $reorder + 1;
-            $que->pivot->card_order = $reorder;
-            $que->pivot->save();
-        }
-        
+        $deck = Deck::findOrFail($deck);
+        $profile = $deck->profile()->first();
         foreach ($deck->cards()->wherePivot('is_hidden', '=', false)->orderBy('card_order', 'asc')->get() as $card) {
             $image = null;
             $audio = null;
-            $image = $card->profiles()->where('profile_id','=',$profile->id)->get()->last()->pivot->image_path;
-            $audio = $card->profiles()->where('profile_id','=',$profile->id)->get()->last()->pivot->audio_path;
-            if ($image) $card['image_path'] = $image;
-            if ($audio) $card['audio_path'] = $audio;
-            $result['cards'][] = array(
-                "card_id" => $card->id,
-                'word' => $card->word,
-                'image_path' => $card->image_path,
-                'audio_path' => $card->audio_path
-            );
+            $image = $card->profiles()->where('profile_id', '=', $profile->id)->get()->last()->pivot->image_path;
+            if (!empty($image)) $card['image_path'] = $image;
+            $audio = $card->profiles()->where('profile_id', '=', $profile->id)->get()->last()->pivot->audio_path;
+            if (!empty($audio)) $card['audio_path'] = $audio;
+
+            $cards[] = $card;
         }
+        $result['cards'] = CardResource::collection($cards);
         $result['success'] = true;
         return response($result);
     }
@@ -73,14 +58,16 @@ class CardDeckController extends Controller
      *        {
      *            "card_id": 8,
      *            "word": "voluptatem",
-     *            "image_path": null,
-     *            "audio_path": null,
+     *            "is_hidden": 0,
+     *            "image_path": "public/storage/images/cards/202209260915image.png"
+     *            "audio_path": "public/storage/audios/cards/202209260945audiofile.mp3"
      *        },
      *        {
      *            "card_id": 6,
      *            "word": "rerum",
-     *            "image_path": null,
-     *            "audio_path": null,
+     *            "is_hidden": 1,
+     *            "image_path": "public/storage/images/cards/202209260945image.png"
+     *            "audio_path": "public/storage/audios/cards/202209261008audiofile.mp3"
      *        }
      *    ],
      *    "success": true
@@ -89,49 +76,35 @@ class CardDeckController extends Controller
     public function index_edit($deck)
     {
         $result = [];
-        $ordered = [];
-        $queue = [];
         $deck = Deck::findOrFail($deck);
         $profile = $deck->profile()->get()->last();
-        $ordered = $deck->cards()->wherePivot('card_order', '!=', null)->orderBy('card_order', 'asc')->get();
-        $queue = $deck->cards()->wherePivot('card_order', '=', null)->orderBy('id', 'asc')->get();
-
-        $reorder = 0;
-        if (count($ordered) == 0) {
-            $reorder = 0;
-        } else {
-            $reorder = $ordered->last()->pivot->card_order;
-        }
-        foreach ($queue as $que) {
-            $reorder = $reorder + 1;
-            $que->pivot->card_order = $reorder;
-            $que->pivot->save();
-        }
-        foreach ($deck->cards()->orderBy('card_order', 'asc')->get() as $card) {
+        foreach ($deck->cards()->wherePivot('is_hidden', '=', false)->orderBy('card_order', 'asc')->get() as $card) {
             $image = null;
             $audio = null;
-            $image = $card->profiles()->where('profile_id','=',$profile->id)->get()->last()->pivot->image_path;
-            $audio = $card->profiles()->where('profile_id','=',$profile->id)->get()->last()->pivot->audio_path;
-            if ($image) $card['image_path'] = $image;
-            if ($audio) $card['audio_path'] = $audio;
-            $result['cards'][] = array(
-                "card_id" => $card->id,
-                'word' => $card->word,
-                'image_path' => $card->image_path,
-                'audio_path' => $card->audio_path
-            );
+            $image = $card->profiles()->where('profile_id', '=', $profile->id)->get()->last()->pivot->image_path;
+            if (!empty($image)) $card['image_path'] = $image;
+            $audio = $card->profiles()->where('profile_id', '=', $profile->id)->get()->last()->pivot->audio_path;
+            if (!empty($audio)) $card['audio_path'] = $audio;
+            
+            $cards[] = $card;
         }
+        $result['cards'] = CardResource::collection($cards);
         $result['success'] = true;
         return response($result);
     }
     /**
      * @group 05.Card
-     * Hide card in a deck
+     * Hide/Show card in a deck
      * 
      * @response {
-     *    "hidden": true,
-     *    "success": true
-     * }
+     *    "success": true,
+     *    "card": {
+     *        "id": 8,
+     *        "word": "deleniti",
+     *        "is_hidden": false,
+     *        "image_path": null,
+     *        "audio_path": null
+     *    }
      */
     public function hide($deck, $id)
     {
@@ -140,14 +113,13 @@ class CardDeckController extends Controller
         if ($card->pivot->is_hidden) {
             $card->pivot->is_hidden = false;
             $card->pivot->save();
-            $result['hidden'] = false;
             $result['success'] = true;
         } else {
             $card->pivot->is_hidden = true;
             $card->pivot->save();
-            $result['hidden'] = true;
             $result['success'] = true;
         }
+        $result['card'] = new CardResource($card);
         return response($result);
     }
 }

@@ -24,32 +24,48 @@ class Deck extends Model
         'profile_id',
         'deck_order'
     ];
-    
-    static $rules = [
-        'name' => 'required|max:255',
-        'profile_id' => 'nullable|exists:profiles,id'
+
+    protected $casts = [
+        'is_hidden' => 'boolean',
     ];
+
+    public function getImagepathAttribute($image_path){
+        if (!empty($image_path)){
+            return '/storage/'.$image_path;
+        } else {
+            return $image_path;
+        }
+    }
+
+    public static function copyValidation($profile_id)
+    {
+        $rules = [];
+        return $rules['name'] = ['max:255', Rule::unique('decks', 'name')->where(fn ($query) => $query->where('profile_id', $profile_id))];
+    }
 
     public static function validation($id, $profile_id)
     {
-        $rules =[];
+        $rules = [];
         if (!$id) {
-            // new deck
-            if (!$profile_id) {
-                //all null
-            } else {
-                //add to profile
-                $rules['name'] = ['required', 'max:255', Rule::unique('decks','name')->where(fn ($query) => $query->where('profile_id', $profile_id))];
-                $rules['image'] = ['image','mimes:jpg,png,jpeg,gif,svg,webp'];
-        }
-     } else {
+            //add to profile
+            $rules['name'] = ['required', 'max:255', Rule::unique('decks', 'name')->where(fn ($query) => $query->where('profile_id', $profile_id))];
+            $rules['image'] = ['required', 'image', 'mimes:jpg,png,jpeg,gif,svg,webp'];
+        } else {
             // edit deck
-            $rules['name'] = ['max:255', Rule::unique('decks','name')->ignore($id)->where(fn ($query) => $query->where('profile_id', $profile_id))];
+            $rules['name'] = ['max:255', Rule::unique('decks', 'name')->ignore($id)->where(fn ($query) => $query->where('profile_id', $profile_id))];
             $rules['profile_id'] = ['exists:profiles,id'];
-            $rules['image'] = ['image','mimes:jpg,png,jpeg,gif,svg,webp'];
+            $rules['image'] = ['image', 'mimes:jpg,png,jpeg,gif,svg,webp'];
         }
         return $rules;
     }
+
+    static $msg = [
+        'required' => 'The :attribute field is required.',
+        'unique' => 'The :attribute field must be unique.',
+        'max' => 'The :attribute must be smaller than :max.',
+        'exists' => 'The :attribute must exists.',
+        'mimes' => 'The :attribute must be :mimes.'
+    ];
 
     public function profile()
     {
@@ -57,7 +73,7 @@ class Deck extends Model
     }
     public function cards()
     {
-        return $this->belongsToMany(Card::class)->withPivot('card_order','is_hidden')->withTimestamps();
+        return $this->belongsToMany(Card::class)->withPivot('card_order', 'is_hidden')->withTimestamps();
     }
     public function patienttypes()
     {

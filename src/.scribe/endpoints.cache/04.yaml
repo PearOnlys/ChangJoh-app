@@ -41,10 +41,11 @@ endpoints:
           {
              "cards": [
                  {
-                     "card_id": 8,
+                     "id": 8,
                      "word": "voluptatem",
-                     "image_path": null,
-                     "audio_path": null,
+                     "is_hidden": 0
+                     "image_path": "public/storage/images/cards/202209260915image.png",
+                     "audio_path": "public/storage/audios/cards/202209260915audiofile.mp3"
                  }
              ],
              "success": true
@@ -98,14 +99,16 @@ endpoints:
                  {
                      "card_id": 8,
                      "word": "voluptatem",
-                     "image_path": null,
-                     "audio_path": null,
+                     "is_hidden": 0,
+                     "image_path": "public/storage/images/cards/202209260915image.png"
+                     "audio_path": "public/storage/audios/cards/202209260945audiofile.mp3"
                  },
                  {
                      "card_id": 6,
                      "word": "rerum",
-                     "image_path": null,
-                     "audio_path": null,
+                     "is_hidden": 1,
+                     "image_path": "public/storage/images/cards/202209260945image.png"
+                     "audio_path": "public/storage/audios/cards/202209261008audiofile.mp3"
                  }
              ],
              "success": true
@@ -152,27 +155,27 @@ endpoints:
         name: word
         description: string
         required: false
-        example: delectus
+        example: et
         type: required
         custom: []
       image:
         name: image
         description: 'mimes:jpg,png,jpeg,gif,svg,webp'
         required: false
-        example: quidem
+        example: reiciendis
         type: required
         custom: []
       audio:
         name: audio
         description: 'mime:mimes:mp3,mpga,wav,ogg'
         required: false
-        example: dolore
+        example: quae
         type: audio
         custom: []
     cleanBodyParameters:
-      word: delectus
-      image: quidem
-      audio: dolore
+      word: et
+      image: reiciendis
+      audio: quae
     fileParameters: []
     responses:
       -
@@ -180,14 +183,19 @@ endpoints:
         content: |-
           {
              "card": {
-                 "word": "Merry",
-                 "is_global": false,
-                 "image_path": "images/cards/202209230745login-register.jpg",
-                 "audio_path": "audio/cards/202209230821audiofileMP3.mp3",
-                 "updated_at": "2022-09-23T07:45:31.000000Z",
-                 "created_at": "2022-09-23T07:45:31.000000Z",
-                 "id": 22
+                 "id": 35,
+                 "word": "MerryWaether",
+                 "is_hidden": 0,
+                 "image_path": "public/storage/images/cards/202209230745imagefilejpg.jpg",
+                 "audio_path": "public/storage/audios/cards/202209230821audiofileMP3.mp3"
              },
+             "deck": {
+                 "id": 35,
+                 "name": "MerryWaether",
+                 "is_hidden": 0,
+                 "image_path": "public/storage/images/cards/202209230745imagefilejpg.jpg",
+                 "#cards": 9
+             }
              "success": true
           }
         headers: []
@@ -246,8 +254,9 @@ endpoints:
              "card": {
                  "id": 35,
                  "word": "MerryWaether",
-                 "image_path": "images/cards/202209230745imagefilejpg.jpg",
-                 "audio_path": "audio/cards/202209230821audiofileMP3.mp3"
+                 "is_hidden": 0,
+                 "image_path": "public/storage/images/cards/202209230745imagefilejpg.jpg",
+                 "audio_path": "public/storage/audios/cards/202209230821audiofileMP3.mp3"
              }
           }
         headers: []
@@ -300,27 +309,27 @@ endpoints:
         name: word
         description: ''
         required: false
-        example: culpa
+        example: est
         type: string
         custom: []
       image:
         name: image
         description: 'mimes:jpg,png,jpeg,gif,svg,webp'
         required: false
-        example: earum
+        example: debitis
         type: image
         custom: []
       audio:
         name: audio
         description: 'mime:mimes:mp3,mpga,wav,ogg'
         required: false
-        example: eum
+        example: beatae
         type: audio
         custom: []
     cleanBodyParameters:
-      word: culpa
-      image: earum
-      audio: eum
+      word: est
+      image: debitis
+      audio: beatae
     fileParameters: []
     responses:
       -
@@ -329,8 +338,8 @@ endpoints:
           {
              "card": {
                  "id": 35,
-                 "is_global": false,
                  "word": "MerryWaether",
+                 "is_hidden": 0,
                  "image_path": "images/cards/202209230745imagefilejpg.jpg",
                  "audio_path": "audio/cards/202209230821audiofileMP3.mp3"
              },
@@ -410,7 +419,7 @@ endpoints:
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Hide card in a deck'
+      title: 'Hide/Show card in a deck'
       description: ''
       authenticated: false
       custom: []
@@ -445,9 +454,14 @@ endpoints:
         status: 200
         content: |-
           {
-             "hidden": true,
-             "success": true
-          }
+             "success": true,
+             "card": {
+                 "id": 8,
+                 "word": "deleniti",
+                 "is_hidden": false,
+                 "image_path": null,
+                 "audio_path": null
+             }
         headers: []
         description: '200'
         custom: []

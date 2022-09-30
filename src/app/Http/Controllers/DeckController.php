@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DeckResource;
+use App\Http\Resources\ProfileResource;
 use App\Models\Card;
 use App\Models\Deck;
 use App\Models\Profile;
@@ -24,102 +26,76 @@ class DeckController extends Controller
      *            "id": 12,
      *            "name": "ipsam",
      *            "is_hidden": 0,
-     *            "image_path": "images/decks/202209261050imagefile.png"
-     *       }
-     *  }
+     *            "image_path": "images/decks/202209261050imagefile.png",
+     *            "#cards": 0
+     *    }
+     * }
      */
     public function show($id)
     {
         $result = [];
-        $deck = Deck::find($id);
-        $result['deck'] = array(
-            'id' => $deck->id,
-            'name' => $deck->name,
-            'is_hidden' => $deck->is_hidden,
-            'image_path' => $deck->image_path
-        );
+        $result['deck'] = new DeckResource(Deck::findOrFail($id));
         return response($result);
     }
-    
+
     /**
      * @group 04.Deck
      * Show all deck of a profile that were not hidden
      * @response {
-     *    "decks": [
-     *        {
-     *            "id": 12,
-     *            "name": "ipsam",
-     *            "image_path": null
-     *        },
-     *        {
-     *            "id": 13,
-     *            "name": "laudantium",
-     *            "image_path": null
-     *        }
-     *     ]
-     *  }
+     *   "decks": [
+     *       {
+     *           "id": 11,
+     *           "name": "dolores",
+     *           "is_hidden": 0,
+     *           "image_path": "public/storage/",
+     *           "#cards": 2
+     *       },
+     *       {
+     *           "id": 13,
+     *           "name": "beatae",
+     *           "is_hidden": 0,
+     *           "image_path": "public/storage/",
+     *           "#cards": 5
+     *       }
+     *   ]
+     * }
      */
     public function index_show($profile)
     {
         $result = [];
-        $ordered = [];
-        $queue = [];
-        $profile = Profile::find($profile);
-        $ordered = $profile->decks()->whereNot('deck_order', '=', null)->orderBy('deck_order', 'asc')->get();
-        $queue = $profile->decks()->where('deck_order', '=', null)->orderBy('id', 'asc')->get();
-        if (count($ordered) == 0) {
-            $reorder = 0;
-        } else {
-            $reorder = $ordered->last()->deck_order;
-        }
-        foreach ($queue as $que) {
-            $reorder = $reorder + 1;
-            $que->deck_order = $reorder;
-            $que->save();
-        }
-        $decks = $profile->decks()->where('is_hidden','=',false)->orderBy('deck_order', 'asc')->get(['id','name','image_path']);
-        $result['decks'] = $decks;
+        $profile = Profile::findOrFail($profile);
+        $decks = $profile->decks()->where('is_hidden','=',false)->orderBy('deck_order', 'asc')->get();
+        $result['decks'] = DeckResource::collection($decks);
         return response($result);
     }
     /**
      * @group 04.Deck
      * Show all deck of a profile, even hidden
      * @response {
-     *    "decks": [
-     *        {
-     *            "id": 12,
-     *            "name": "ipsam",
-     *            "image_path": null,
-     *            "is_hidden": 0
-     *        },
-     *        {
-     *            "id": 13,
-     *            "name": "laudantium",
-     *            "image_path": null
-     *            "is_hidden": 1
-     *
-     *        }
-     *     ]
-     *  }
+     *   "decks": [
+     *       {
+     *           "id": 11,
+     *           "name": "dolores",
+     *           "is_hidden": 0,
+     *           "image_path": "public/storage/",
+     *           "#cards": 2
+     *       },
+     *       {
+     *           "id": 13,
+     *           "name": "beatae",
+     *           "is_hidden": 1,
+     *           "image_path": "public/storage/",
+     *           "#cards": 5
+     *       }
+     *   ]
+     * }
      */
     public function index_edit($profile)
     {
         $result = [];
-        $profile = Profile::find($profile);
-        $ordered = $profile->decks()->whereNot('deck_order', '=', null)->orderBy('deck_order', 'asc')->get();
-        $queue = $profile->decks()->where('deck_order', '=', null)->orderBy('id', 'asc')->get();
-        if (count($ordered) == 0) {
-            $reorder = 0;
-        } else {
-            $reorder = $ordered->last()->deck_order;
-        }
-        foreach ($queue as $que) {
-            $reorder = $reorder + 1;
-            $que->deck_order = $reorder;
-            $que->save();
-        }
-
-        $result['decks'] = $profile->decks()->orderBy('deck_order', 'asc')->get(['id','name','image_path','is_hidden']);
+        $profile = Profile::findOrFail($profile);
+        $decks = $profile->decks()->orderBy('deck_order', 'asc')->get();
+        $result['decks'] = DeckResource::collection($decks);
         return response($result);
     }
 
@@ -128,47 +104,51 @@ class DeckController extends Controller
      * Create & add deck to profile
      * 
      * @response {
-     *    "deck": {
-     *        "name": "Car",
-     *        "profile_id": "7",
-     *        "deck_order": 4,
-     *        "updated_at": "2022-09-23T06:31:05.000000Z",
-     *        "created_at": "2022-09-23T06:31:05.000000Z",
-     *        "id": 26
-     *    },
-     *    "success": true
+     *   "deck":
+     *       {
+     *           "id": 11,
+     *           "name": "dolores",
+     *           "is_hidden": 0,
+     *           "image_path": "public/storage/images/decks/202209300415safari-logo.png",
+     *           "#cards": 0
+     *       },
+     *    "profile":
+     *       {
+     *           "id": 11,
+     *           "name": "Merry Weather",
+     *           "type": 2,
+     *           "image": "public/storage/images/profiles/202209260458sketch.jpg",
+     *       }
+     *     "success": true
      * }
      */
     public function create(Request $request, $profile_id)
     {
         $result = [];
-        $lastdeck = Profile::findOrFail($profile_id)->decks()->orderBy('deck_order')->get()->last();
         $valiadtor = Validator::make($request->all(), Deck::validation(null, $profile_id));
+        $profile = Profile::findOrFail($profile_id);
         if ($valiadtor->fails()) {
+            $result['error'] = $valiadtor->messages();
             $result['success'] = false;
         } else {
+            $newdeck = new Deck();
             if (!$request->image) {
-                $newdeck = new Deck();
-                $newdeck->fill($request->only(['name']));
-                $newdeck->profile_id = $profile_id;
-                $newdeck->deck_order = $lastdeck->deck_order +1;
-                $newdeck->save();
-                $result['deck'] = $newdeck;
-                $result['success'] = true;
+                $newdeck->image_path = null;
             } else {
                 $file = $request->file('image');
                 $filename = date('YmdHi') . $file->getClientOriginalName();
                 $path = Storage::putFileAs('images/decks', $file, $filename);
-
-                $newdeck = new Deck();
-                $newdeck->fill($request->only(['name']));
-                $newdeck->profile_id = $profile_id;
-                $newdeck->deck_order = $lastdeck->deck_order +1;
                 $newdeck->image_path = $path;
-                $newdeck->save();
-                $result['deck'] = $newdeck;
-                $result['success'] = true;
             }
+            $newdeck->fill($request->only(['name']));
+            $newdeck->profile_id = $profile_id;
+            $newdeck->deck_order = $profile->decks()->max('deck_order')+1;
+            $newdeck->is_hidden = false;
+            $newdeck->save();
+
+            $result['deck'] = new DeckResource($newdeck);
+            $result['profile'] = new ProfileResource($profile);
+            $result['success'] = true;
         }
         return response($result);
     }
@@ -178,16 +158,11 @@ class DeckController extends Controller
      * 
      * @response {
      *    "deck": {
-     *        "id": 26,
-     *        "name": "Carry",
-     *        "global": 0,
-     *        "profile_id": 7,
-     *        "image_path": "images/decks/202209230636login-register.jpg",
-     *        "deck_order": 4,
-     *        "hidden": 0,
-     *        "created_at": "2022-09-23T06:31:05.000000Z",
-     *        "updated_at": "2022-09-23T06:36:36.000000Z",
-     *        "deleted_at": null
+     *        "id": 14,
+     *        "name": "popapi",
+     *        "is_hidden": 0,
+     *        "image_path": "public/storage/images/decks/202209300521firefox-logo.png",
+     *        "#cards": 3
      *    },
      *    "success": true
      * }
@@ -196,23 +171,20 @@ class DeckController extends Controller
     {
         $deck = Deck::find($id);
         $profile_id = $deck->profile_id;
-        $valiadtor = Validator::make($request->all(), Deck::validation($id, $profile_id));
+        $valiadtor = Validator::make($request->all(), Deck::validation($id, $profile_id),Deck::$msg);
         if ($valiadtor->fails()) {
+            $result['error'] = $valiadtor->messages();
             $result['success'] = false;
         } else {
-            if (!$request->image) {
-                $deck->fill($request->only(['name']));
-                $deck->save();
-            } else {
+            if($request->image){
                 $file = $request->file('image');
                 $filename = date('YmdHi') . $file->getClientOriginalName();
                 $path = Storage::putFileAs('images/decks', $file, $filename);
-
-                $deck->fill($request->only(['name']));
                 $deck->image_path = $path;
-                $deck->save();
             }
-            $result['deck'] = $deck;
+            $deck->fill($request->only(['name']));
+            $deck->save();
+            $result['deck'] = new DeckResource($deck);
             $result['success'] = true;
         }
         return response($result);
@@ -230,7 +202,7 @@ class DeckController extends Controller
     {
         $result = [];
         $deck = Deck::find($id);
-        if ($deck->global) {
+        if ($deck->is_global) {
             $result['msg'] = 'Global deck';
             $result['success'] = false;
         } else {
@@ -242,28 +214,32 @@ class DeckController extends Controller
     }
     /**
      * @group 04.Deck
-     * Hide deck
+     * Hide/Show deck
      * 
      * @response {
-     *    "hidden": true,
-     *    "success": true
-     * }
+     *    "success": true,
+     *    "deck": {
+     *        "id": 16,
+     *        "name": "est",
+     *        "is_hidden": true,
+     *        "image_path": null,
+     *        "#cards": 6
+     *    }
      */
     public function hide($id)
     {
         $result = [];
         $deck = Deck::find($id);
-        if($deck->hidden){
-            $deck->hidden = false;
+        if($deck->is_hidden){
+            $deck->is_hidden = false;
             $deck->save();
-            $result['hidden'] = false;
             $result['success'] = true;
         } else {
-            $deck->hidden = true;
+            $deck->is_hidden = true;
             $deck->save();
-            $result['hidden'] = true;
             $result['success'] = true;
         }
+        $result['deck'] = new DeckResource($deck);
         return response($result);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,11 +18,7 @@ class UserController extends Controller
      * @response {
      *   "user": {
      *       "id": 1,
-     *       "mobile": "0873000207",
-     *       "mobile_verified_at": "2022-09-21T09:29:03.000000Z",
-     *       "created_at": "2022-09-21T09:29:04.000000Z",
-     *       "updated_at": "2022-09-21T09:29:04.000000Z",
-     *       "deleted_at": null
+     *       "mobile": "0873000207"
      *   }
      * }
      */
@@ -29,40 +26,36 @@ class UserController extends Controller
     {
         $result = [];
         $user = Auth::user();
-        $result['user'] = $user;
+        $result['user'] = new UserResource($user);
         return response($result);
     }
 
     /**
      * @group 01.User
-     * Update user
+     * Edit user (mobile)
      * 
      * @bodyParam mobile string
      * @authenticated
      * @response {
      *    "user": {
      *        "id": 1,
-     *        "mobile": "0873040207",
-     *        "mobile_verified_at": "2022-09-21T09:29:03.000000Z",
-     *        "created_at": "2022-09-21T09:29:04.000000Z",
-     *        "updated_at": "2022-09-23T05:23:46.000000Z",
-     *        "deleted_at": null
+     *        "mobile": "0873040208"
      *    },
      *    "success": true
      *}
      */
-    public function update(Request $request)
+    public function edit(Request $request)
     {
         $result = [];
         $user = Auth::user();
-        $result['user'] = $user;
-        $validator = Validator::make($request->all(), User::validation($user->id));
+        $validator = Validator::make($request->only(['mobile']), User::validation($user->id), User::$msg);
         if($validator->fails()){
+            $result['error'] = $validator->messages();
             $result['success'] = false;
         } else {
             $user->fill($request->only(['mobile']));
             $user->save();
-            $result['user'] = $user;
+            $result['user'] = new UserResource($user);
             $result['success'] = true;
         }
         return response($result);

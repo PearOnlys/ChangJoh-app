@@ -31,7 +31,7 @@ Route::post('type', [PatienttypeController::class, 'store']);
 Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'user'], function () {
         Route::get('infomation', [UserController::class, 'show']);
-        Route::post('infomation', [UserController::class, 'update']);
+        Route::post('infomation', [UserController::class, 'edit']);
     });
     Route::group(['prefix' => 'profile'], function () { //profiles
         Route::post('create', [ProfileController::class, 'store']); //+Replicate template(deck) +sync cards

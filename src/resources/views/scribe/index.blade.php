@@ -84,7 +84,7 @@
                                 <a href="#01user-GETapi-user-infomation">Show user</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="01user-POSTapi-user-infomation">
-                                <a href="#01user-POSTapi-user-infomation">Update user</a>
+                                <a href="#01user-POSTapi-user-infomation">Edit user (mobile)</a>
                             </li>
                                                                         </ul>
                             </ul>
@@ -141,7 +141,7 @@
                                 <a href="#04deck-POSTapi-deck--deck_id--edit">Edit deck</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="04deck-POSTapi-deck--deck_id--hide">
-                                <a href="#04deck-POSTapi-deck--deck_id--hide">Hide deck</a>
+                                <a href="#04deck-POSTapi-deck--deck_id--hide">Hide/Show deck</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="04deck-POSTapi-deck--deck_id--delete">
                                 <a href="#04deck-POSTapi-deck--deck_id--delete">Delete deck</a>
@@ -175,7 +175,7 @@
                                 <a href="#05card-GETapi-deck--deck_id--card--card_id--delete">Delete card</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="05card-POSTapi-deck--deck_id--card--card_id--hide">
-                                <a href="#05card-POSTapi-deck--deck_id--card--card_id--hide">Hide card in a deck</a>
+                                <a href="#05card-POSTapi-deck--deck_id--card--card_id--hide">Hide/Show card in a deck</a>
                             </li>
                                                                         </ul>
                             </ul>
@@ -187,7 +187,7 @@
                             <li><a href="http://github.com/knuckleswtf/scribe">Documentation powered by Scribe ✍</a></li>
                     </ul>
         <ul class="toc-footer" id="last-updated">
-        <li>Last updated: September 26 2022</li>
+        <li>Last updated: September 30 2022</li>
     </ul>
 </div>
 
@@ -702,11 +702,7 @@ fetch(url, {
 <code class="language-json">{
     &quot;user&quot;: {
         &quot;id&quot;: 1,
-        &quot;mobile&quot;: &quot;0873000207&quot;,
-        &quot;mobile_verified_at&quot;: &quot;2022-09-21T09:29:03.000000Z&quot;,
-        &quot;created_at&quot;: &quot;2022-09-21T09:29:04.000000Z&quot;,
-        &quot;updated_at&quot;: &quot;2022-09-21T09:29:04.000000Z&quot;,
-        &quot;deleted_at&quot;: null
+        &quot;mobile&quot;: &quot;0873000207&quot;
     }
 }</code>
  </pre>
@@ -761,7 +757,7 @@ fetch(url, {
         </p>
                 </form>
 
-                    <h2 id="01user-POSTapi-user-infomation">Update user</h2>
+                    <h2 id="01user-POSTapi-user-infomation">Edit user (mobile)</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
@@ -779,7 +775,7 @@ fetch(url, {
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"mobile\": \"blanditiis\"
+    \"mobile\": \"aspernatur\"
 }"
 </code></pre></div>
 
@@ -795,7 +791,7 @@ const headers = {
 };
 
 let body = {
-    "mobile": "blanditiis"
+    "mobile": "aspernatur"
 };
 
 fetch(url, {
@@ -815,11 +811,7 @@ fetch(url, {
 <code class="language-json">{
     &quot;user&quot;: {
         &quot;id&quot;: 1,
-        &quot;mobile&quot;: &quot;0873040207&quot;,
-        &quot;mobile_verified_at&quot;: &quot;2022-09-21T09:29:03.000000Z&quot;,
-        &quot;created_at&quot;: &quot;2022-09-21T09:29:04.000000Z&quot;,
-        &quot;updated_at&quot;: &quot;2022-09-23T05:23:46.000000Z&quot;,
-        &quot;deleted_at&quot;: null
+        &quot;mobile&quot;: &quot;0873040208&quot;
     },
     &quot;success&quot;: true
 }</code>
@@ -881,7 +873,7 @@ fetch(url, {
                 <input type="text"
                name="mobile"
                data-endpoint="POSTapi-user-infomation"
-               value="blanditiis"
+               value="aspernatur"
                data-component="body" hidden>
     <br>
 
@@ -909,9 +901,9 @@ fetch(url, {
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"veritatis\",
-    \"type_ids\": \"omnis\",
-    \"image\": \"est\"
+    \"name\": \"est\",
+    \"type_ids\": \"veniam\",
+    \"image\": \"soluta\"
 }"
 </code></pre></div>
 
@@ -927,9 +919,9 @@ const headers = {
 };
 
 let body = {
-    "name": "veritatis",
-    "type_ids": "omnis",
-    "image": "est"
+    "name": "est",
+    "type_ids": "veniam",
+    "image": "soluta"
 };
 
 fetch(url, {
@@ -947,20 +939,19 @@ fetch(url, {
                 <pre>
 
 <code class="language-json">{
-   &quot;profile&quot;: {
-       &quot;id&quot;: 9,
-       &quot;name&quot;: &quot;Eddy&quot;,
-       &quot;patient_type&quot;: &quot;4&quot;,
-       &quot;decks&quot;: [
-           {
-               &quot;id&quot;: 22
-           },
-           {
-               &quot;id&quot;: 23
-           },
-       ]
-   },
-   &quot;success&quot;: true
+    &quot;profile&quot;: {
+        &quot;name&quot;: &quot;Merry&quot;,
+        &quot;type&quot;: &quot;4&quot;,
+        &quot;image&quot;: &quot;public/storage/images/profiles/2022092706461.jpg&quot;
+    },
+    &quot;decks&quot;: [
+        {
+            &quot;id&quot;: 32,
+            &quot;name&quot;: &quot;non&quot;,
+            &quot;#cards&quot;: 8
+        }
+    ],
+    &quot;success&quot;: true
 }</code>
  </pre>
     </span>
@@ -1011,7 +1002,7 @@ fetch(url, {
                 <input type="text"
                name="name"
                data-endpoint="POSTapi-profile-create"
-               value="veritatis"
+               value="est"
                data-component="body" hidden>
     <br>
 <p>name</p>
@@ -1023,7 +1014,7 @@ fetch(url, {
                 <input type="text"
                name="type_ids"
                data-endpoint="POSTapi-profile-create"
-               value="omnis"
+               value="veniam"
                data-component="body" hidden>
     <br>
 <p>type_ids</p>
@@ -1035,7 +1026,7 @@ fetch(url, {
                 <input type="text"
                name="image"
                data-endpoint="POSTapi-profile-create"
-               value="est"
+               value="soluta"
                data-component="body" hidden>
     <br>
 <p>image mimes:jpg,png,jpeg,gif,svg,webp</p>
@@ -1084,15 +1075,11 @@ fetch(url, {
                 <pre>
 
 <code class="language-json">{
-   &quot;profile list&quot;: [
+   &quot;profiles&quot;: [
        {
-           &quot;id&quot;: 1,
-           &quot;user_id&quot;: 1,
            &quot;name&quot;: &quot;Emmy&quot;,
-           &quot;image_path&quot;: &quot;images/profiles/202209221207alert.png&quot;,
-           &quot;created_at&quot;: &quot;2022-09-21T09:29:04.000000Z&quot;,
-           &quot;updated_at&quot;: &quot;2022-09-22T12:07:12.000000Z&quot;,
-           &quot;deleted_at&quot;: null
+           &quot;type&quot;: 4,
+           &quot;image_path&quot;: &quot;public/storage/images/profiles/202209221207alert.png&quot;
        }
    }</code>
  </pre>
@@ -1181,10 +1168,9 @@ fetch(url, {
 
 <code class="language-json">{
     &quot;profile&quot;: {
-        &quot;id&quot;: 1,
         &quot;name&quot;: &quot;Emmy&quot;,
-        &quot;image&quot;: &quot;images/profiles/202209221207alert.png&quot;,
-        &quot;patient_type&quot;: 4
+        &quot;type&quot;: 4,
+        &quot;image_path&quot;: &quot;public/storage/images/profiles/202209221207alert.png&quot;
     }
 }</code>
  </pre>
@@ -1260,9 +1246,9 @@ fetch(url, {
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"qui\",
-    \"type_id\": \"et\",
-    \"image\": \"saepe\"
+    \"name\": \"impedit\",
+    \"type_id\": \"repellendus\",
+    \"image\": \"ducimus\"
 }"
 </code></pre></div>
 
@@ -1278,9 +1264,9 @@ const headers = {
 };
 
 let body = {
-    "name": "qui",
-    "type_id": "et",
-    "image": "saepe"
+    "name": "impedit",
+    "type_id": "repellendus",
+    "image": "ducimus"
 };
 
 fetch(url, {
@@ -1300,14 +1286,8 @@ fetch(url, {
 <code class="language-json">{
     &quot;profile&quot;: {
         &quot;name&quot;: &quot;Merry&quot;,
-        &quot;id&quot;: 6,
-        &quot;user_id&quot;: 1,
-        &quot;patient_type&quot;: &quot;4&quot;,
-        &quot;decks&quot;: [
-            {
-                &quot;id&quot;: 11
-            }
-        ]
+        &quot;type&quot;: &quot;4&quot;,
+        &quot;image&quot;: &quot;public/storage/images/profiles/2022092706461.jpg&quot;
     },
     &quot;success&quot;: true
 }</code>
@@ -1373,7 +1353,7 @@ fetch(url, {
                 <input type="text"
                name="name"
                data-endpoint="POSTapi-profile--id--edit"
-               value="qui"
+               value="impedit"
                data-component="body" hidden>
     <br>
 
@@ -1385,7 +1365,7 @@ fetch(url, {
                 <input type="text"
                name="type_id"
                data-endpoint="POSTapi-profile--id--edit"
-               value="et"
+               value="repellendus"
                data-component="body" hidden>
     <br>
 
@@ -1397,7 +1377,7 @@ fetch(url, {
                 <input type="text"
                name="image"
                data-endpoint="POSTapi-profile--id--edit"
-               value="saepe"
+               value="ducimus"
                data-component="body" hidden>
     <br>
 <p>mimes:jpg,png,jpeg,gif,svg,webp</p>
@@ -1639,14 +1619,18 @@ fetch(url, {
 <code class="language-json">{
     &quot;decks&quot;: [
         {
-            &quot;id&quot;: 12,
-            &quot;name&quot;: &quot;ipsam&quot;,
-            &quot;image_path&quot;: null
+            &quot;id&quot;: 11,
+            &quot;name&quot;: &quot;dolores&quot;,
+            &quot;is_hidden&quot;: 0,
+            &quot;image_path&quot;: &quot;public/storage/&quot;,
+            &quot;#cards&quot;: 2
         },
         {
             &quot;id&quot;: 13,
-            &quot;name&quot;: &quot;laudantium&quot;,
-            &quot;image_path&quot;: null
+            &quot;name&quot;: &quot;beatae&quot;,
+            &quot;is_hidden&quot;: 0,
+            &quot;image_path&quot;: &quot;public/storage/&quot;,
+            &quot;#cards&quot;: 5
         }
     ]
 }</code>
@@ -1748,22 +1732,23 @@ fetch(url, {
                 <pre>
 
 <code class="language-json">{
-   &quot;decks&quot;: [
-       {
-           &quot;id&quot;: 12,
-           &quot;name&quot;: &quot;ipsam&quot;,
-           &quot;image_path&quot;: null,
-           &quot;is_hidden&quot;: 0
-       },
-       {
-           &quot;id&quot;: 13,
-           &quot;name&quot;: &quot;laudantium&quot;,
-           &quot;image_path&quot;: null
-           &quot;is_hidden&quot;: 1
-
-       }
+    &quot;decks&quot;: [
+        {
+            &quot;id&quot;: 11,
+            &quot;name&quot;: &quot;dolores&quot;,
+            &quot;is_hidden&quot;: 0,
+            &quot;image_path&quot;: &quot;public/storage/&quot;,
+            &quot;#cards&quot;: 2
+        },
+        {
+            &quot;id&quot;: 13,
+            &quot;name&quot;: &quot;beatae&quot;,
+            &quot;is_hidden&quot;: 1,
+            &quot;image_path&quot;: &quot;public/storage/&quot;,
+            &quot;#cards&quot;: 5
+        }
     ]
- }</code>
+}</code>
  </pre>
     </span>
 <span id="execution-results-GETapi-profile--id--deck-edit" hidden>
@@ -1862,14 +1847,21 @@ fetch(url, {
                 <pre>
 
 <code class="language-json">{
-    &quot;deck&quot;: {
-        &quot;name&quot;: &quot;Car&quot;,
-        &quot;profile_id&quot;: &quot;7&quot;,
-        &quot;deck_order&quot;: 4,
-        &quot;updated_at&quot;: &quot;2022-09-23T06:31:05.000000Z&quot;,
-        &quot;created_at&quot;: &quot;2022-09-23T06:31:05.000000Z&quot;,
-        &quot;id&quot;: 26
-    },
+  &quot;deck&quot;:
+      {
+          &quot;id&quot;: 11,
+          &quot;name&quot;: &quot;dolores&quot;,
+          &quot;is_hidden&quot;: 0,
+          &quot;image_path&quot;: &quot;public/storage/images/decks/202209300415safari-logo.png&quot;,
+          &quot;#cards&quot;: 0
+      },
+   &quot;profile&quot;:
+      {
+          &quot;id&quot;: 11,
+          &quot;name&quot;: &quot;Merry Weather&quot;,
+          &quot;type&quot;: 2,
+          &quot;image&quot;: &quot;public/storage/images/profiles/202209260458sketch.jpg&quot;,
+      }
     &quot;success&quot;: true
 }</code>
  </pre>
@@ -1974,7 +1966,8 @@ fetch(url, {
         &quot;id&quot;: 12,
         &quot;name&quot;: &quot;ipsam&quot;,
         &quot;is_hidden&quot;: 0,
-        &quot;image_path&quot;: &quot;images/decks/202209261050imagefile.png&quot;
+        &quot;image_path&quot;: &quot;images/decks/202209261050imagefile.png&quot;,
+        &quot;#cards&quot;: 0
     }
 }</code>
  </pre>
@@ -2076,16 +2069,11 @@ fetch(url, {
 
 <code class="language-json">{
     &quot;deck&quot;: {
-        &quot;id&quot;: 26,
-        &quot;name&quot;: &quot;Carry&quot;,
-        &quot;global&quot;: 0,
-        &quot;profile_id&quot;: 7,
-        &quot;image_path&quot;: &quot;images/decks/202209230636login-register.jpg&quot;,
-        &quot;deck_order&quot;: 4,
-        &quot;hidden&quot;: 0,
-        &quot;created_at&quot;: &quot;2022-09-23T06:31:05.000000Z&quot;,
-        &quot;updated_at&quot;: &quot;2022-09-23T06:36:36.000000Z&quot;,
-        &quot;deleted_at&quot;: null
+        &quot;id&quot;: 14,
+        &quot;name&quot;: &quot;popapi&quot;,
+        &quot;is_hidden&quot;: 0,
+        &quot;image_path&quot;: &quot;public/storage/images/decks/202209300521firefox-logo.png&quot;,
+        &quot;#cards&quot;: 3
     },
     &quot;success&quot;: true
 }</code>
@@ -2145,7 +2133,7 @@ fetch(url, {
             </p>
                     </form>
 
-                    <h2 id="04deck-POSTapi-deck--deck_id--hide">Hide deck</h2>
+                    <h2 id="04deck-POSTapi-deck--deck_id--hide">Hide/Show deck</h2>
 
 <p>
 </p>
@@ -2187,9 +2175,14 @@ fetch(url, {
                 <pre>
 
 <code class="language-json">{
-    &quot;hidden&quot;: true,
-    &quot;success&quot;: true
-}</code>
+   &quot;success&quot;: true,
+   &quot;deck&quot;: {
+       &quot;id&quot;: 16,
+       &quot;name&quot;: &quot;est&quot;,
+       &quot;is_hidden&quot;: true,
+       &quot;image_path&quot;: null,
+       &quot;#cards&quot;: 6
+   }</code>
  </pre>
     </span>
 <span id="execution-results-POSTapi-deck--deck_id--hide" hidden>
@@ -2364,7 +2357,7 @@ fetch(url, {
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"profile_ids\": \"commodi\"
+    \"profile_ids\": \"et\"
 }"
 </code></pre></div>
 
@@ -2380,7 +2373,7 @@ const headers = {
 };
 
 let body = {
-    "profile_ids": "commodi"
+    "profile_ids": "et"
 };
 
 fetch(url, {
@@ -2460,7 +2453,7 @@ fetch(url, {
                 <input type="text"
                name="profile_ids"
                data-endpoint="POSTapi-deck--deck_id--copy"
-               value="commodi"
+               value="et"
                data-component="body" hidden>
     <br>
 <p>The profile that wanted to copy the deck to.</p>
@@ -2515,10 +2508,11 @@ fetch(url, {
 <code class="language-json">{
    &quot;cards&quot;: [
        {
-           &quot;card_id&quot;: 8,
+           &quot;id&quot;: 8,
            &quot;word&quot;: &quot;voluptatem&quot;,
-           &quot;image_path&quot;: null,
-           &quot;audio_path&quot;: null,
+           &quot;is_hidden&quot;: 0
+           &quot;image_path&quot;: &quot;public/storage/images/cards/202209260915image.png&quot;,
+           &quot;audio_path&quot;: &quot;public/storage/audios/cards/202209260915audiofile.mp3&quot;
        }
    ],
    &quot;success&quot;: true
@@ -2625,14 +2619,16 @@ fetch(url, {
        {
            &quot;card_id&quot;: 8,
            &quot;word&quot;: &quot;voluptatem&quot;,
-           &quot;image_path&quot;: null,
-           &quot;audio_path&quot;: null,
+           &quot;is_hidden&quot;: 0,
+           &quot;image_path&quot;: &quot;public/storage/images/cards/202209260915image.png&quot;
+           &quot;audio_path&quot;: &quot;public/storage/audios/cards/202209260945audiofile.mp3&quot;
        },
        {
            &quot;card_id&quot;: 6,
            &quot;word&quot;: &quot;rerum&quot;,
-           &quot;image_path&quot;: null,
-           &quot;audio_path&quot;: null,
+           &quot;is_hidden&quot;: 1,
+           &quot;image_path&quot;: &quot;public/storage/images/cards/202209260945image.png&quot;
+           &quot;audio_path&quot;: &quot;public/storage/audios/cards/202209261008audiofile.mp3&quot;
        }
    ],
    &quot;success&quot;: true
@@ -2710,9 +2706,9 @@ fetch(url, {
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"word\": \"delectus\",
-    \"image\": \"quidem\",
-    \"audio\": \"dolore\"
+    \"word\": \"et\",
+    \"image\": \"reiciendis\",
+    \"audio\": \"quae\"
 }"
 </code></pre></div>
 
@@ -2728,9 +2724,9 @@ const headers = {
 };
 
 let body = {
-    "word": "delectus",
-    "image": "quidem",
-    "audio": "dolore"
+    "word": "et",
+    "image": "reiciendis",
+    "audio": "quae"
 };
 
 fetch(url, {
@@ -2748,16 +2744,21 @@ fetch(url, {
                 <pre>
 
 <code class="language-json">{
-    &quot;card&quot;: {
-        &quot;word&quot;: &quot;Merry&quot;,
-        &quot;is_global&quot;: false,
-        &quot;image_path&quot;: &quot;images/cards/202209230745login-register.jpg&quot;,
-        &quot;audio_path&quot;: &quot;audio/cards/202209230821audiofileMP3.mp3&quot;,
-        &quot;updated_at&quot;: &quot;2022-09-23T07:45:31.000000Z&quot;,
-        &quot;created_at&quot;: &quot;2022-09-23T07:45:31.000000Z&quot;,
-        &quot;id&quot;: 22
-    },
-    &quot;success&quot;: true
+   &quot;card&quot;: {
+       &quot;id&quot;: 35,
+       &quot;word&quot;: &quot;MerryWaether&quot;,
+       &quot;is_hidden&quot;: 0,
+       &quot;image_path&quot;: &quot;public/storage/images/cards/202209230745imagefilejpg.jpg&quot;,
+       &quot;audio_path&quot;: &quot;public/storage/audios/cards/202209230821audiofileMP3.mp3&quot;
+   },
+   &quot;deck&quot;: {
+       &quot;id&quot;: 35,
+       &quot;name&quot;: &quot;MerryWaether&quot;,
+       &quot;is_hidden&quot;: 0,
+       &quot;image_path&quot;: &quot;public/storage/images/cards/202209230745imagefilejpg.jpg&quot;,
+       &quot;#cards&quot;: 9
+   }
+   &quot;success&quot;: true
 }</code>
  </pre>
     </span>
@@ -2821,7 +2822,7 @@ fetch(url, {
                 <input type="text"
                name="word"
                data-endpoint="POSTapi-deck--deck_id--card-create"
-               value="delectus"
+               value="et"
                data-component="body" hidden>
     <br>
 <p>string</p>
@@ -2833,7 +2834,7 @@ fetch(url, {
                 <input type="text"
                name="image"
                data-endpoint="POSTapi-deck--deck_id--card-create"
-               value="quidem"
+               value="reiciendis"
                data-component="body" hidden>
     <br>
 <p>mimes:jpg,png,jpeg,gif,svg,webp</p>
@@ -2845,7 +2846,7 @@ fetch(url, {
                 <input type="text"
                name="audio"
                data-endpoint="POSTapi-deck--deck_id--card-create"
-               value="dolore"
+               value="quae"
                data-component="body" hidden>
     <br>
 <p>mime:mimes:mp3,mpga,wav,ogg</p>
@@ -2897,8 +2898,9 @@ fetch(url, {
     &quot;card&quot;: {
         &quot;id&quot;: 35,
         &quot;word&quot;: &quot;MerryWaether&quot;,
-        &quot;image_path&quot;: &quot;images/cards/202209230745imagefilejpg.jpg&quot;,
-        &quot;audio_path&quot;: &quot;audio/cards/202209230821audiofileMP3.mp3&quot;
+        &quot;is_hidden&quot;: 0,
+        &quot;image_path&quot;: &quot;public/storage/images/cards/202209230745imagefilejpg.jpg&quot;,
+        &quot;audio_path&quot;: &quot;public/storage/audios/cards/202209230821audiofileMP3.mp3&quot;
     }
 }</code>
  </pre>
@@ -2986,9 +2988,9 @@ fetch(url, {
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"word\": \"culpa\",
-    \"image\": \"earum\",
-    \"audio\": \"eum\"
+    \"word\": \"est\",
+    \"image\": \"debitis\",
+    \"audio\": \"beatae\"
 }"
 </code></pre></div>
 
@@ -3004,9 +3006,9 @@ const headers = {
 };
 
 let body = {
-    "word": "culpa",
-    "image": "earum",
-    "audio": "eum"
+    "word": "est",
+    "image": "debitis",
+    "audio": "beatae"
 };
 
 fetch(url, {
@@ -3026,8 +3028,8 @@ fetch(url, {
 <code class="language-json">{
     &quot;card&quot;: {
         &quot;id&quot;: 35,
-        &quot;is_global&quot;: false,
         &quot;word&quot;: &quot;MerryWaether&quot;,
+        &quot;is_hidden&quot;: 0,
         &quot;image_path&quot;: &quot;images/cards/202209230745imagefilejpg.jpg&quot;,
         &quot;audio_path&quot;: &quot;audio/cards/202209230821audiofileMP3.mp3&quot;
     },
@@ -3107,7 +3109,7 @@ fetch(url, {
                 <input type="text"
                name="word"
                data-endpoint="POSTapi-deck--deck_id--card--card_id--edit"
-               value="culpa"
+               value="est"
                data-component="body" hidden>
     <br>
 
@@ -3119,7 +3121,7 @@ fetch(url, {
                 <input type="text"
                name="image"
                data-endpoint="POSTapi-deck--deck_id--card--card_id--edit"
-               value="earum"
+               value="debitis"
                data-component="body" hidden>
     <br>
 <p>mimes:jpg,png,jpeg,gif,svg,webp</p>
@@ -3131,7 +3133,7 @@ fetch(url, {
                 <input type="text"
                name="audio"
                data-endpoint="POSTapi-deck--deck_id--card--card_id--edit"
-               value="eum"
+               value="beatae"
                data-component="body" hidden>
     <br>
 <p>mime:mimes:mp3,mpga,wav,ogg</p>
@@ -3251,7 +3253,7 @@ fetch(url, {
             </p>
                     </form>
 
-                    <h2 id="05card-POSTapi-deck--deck_id--card--card_id--hide">Hide card in a deck</h2>
+                    <h2 id="05card-POSTapi-deck--deck_id--card--card_id--hide">Hide/Show card in a deck</h2>
 
 <p>
 </p>
@@ -3293,9 +3295,14 @@ fetch(url, {
                 <pre>
 
 <code class="language-json">{
-    &quot;hidden&quot;: true,
-    &quot;success&quot;: true
-}</code>
+   &quot;success&quot;: true,
+   &quot;card&quot;: {
+       &quot;id&quot;: 8,
+       &quot;word&quot;: &quot;deleniti&quot;,
+       &quot;is_hidden&quot;: false,
+       &quot;image_path&quot;: null,
+       &quot;audio_path&quot;: null
+   }</code>
  </pre>
     </span>
 <span id="execution-results-POSTapi-deck--deck_id--card--card_id--hide" hidden>
