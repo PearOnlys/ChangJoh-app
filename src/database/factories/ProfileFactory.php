@@ -19,8 +19,8 @@ class ProfileFactory extends Factory
         return [
             'name' => fake()->name(),
             'user_id' => 1,
-            'image_path' => null,
-            'patient_type_id' => random_int(1,10)
+            'image_path' => 'null',
+            'type_id' => random_int(1,10)
         ];
     }
 }

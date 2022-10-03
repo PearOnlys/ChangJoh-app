@@ -35,11 +35,11 @@ class Profile extends Model
         $rules = [];
         if (!$id) {
             $rules['name'] = ['required', 'max:255', Rule::unique('profiles','name')->where(fn ($query) => $query->where('user_id',Auth::user()->id))];
-            $rules['type_id'] = ['required', 'exists:patient_types,id'];
+            $rules['type_id'] = ['required', 'exists:types,id'];
             $rules['image'] = ['required', 'image', 'mimes:jpg,png,jpeg,gif,svg,webp'];
         } else {
             $rules['name'] = ['max:255', Rule::unique('profiles','name')->ignore($id)->where(fn ($query) => $query->where('user_id',Auth::user()->id))];
-            $rules['type_id'] = ['exists:patient_types,id'];
+            $rules['type_id'] = ['exists:types,id'];
             $rules['image'] = ['image', 'mimes:jpg,png,jpeg,gif,svg,webp'];
         }
         return $rules;
@@ -60,9 +60,9 @@ class Profile extends Model
     {
         return $this->hasMany(Deck::class);
     }
-    public function patientTypes()
+    public function type()
     {
-        return $this->belongsTo(Patient_type::class);
+        return $this->belongsTo(Type::class);
     }
     public function cards()
     {

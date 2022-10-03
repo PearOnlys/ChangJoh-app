@@ -75,8 +75,8 @@ class Deck extends Model
     {
         return $this->belongsToMany(Card::class)->withPivot('card_order', 'is_hidden')->withTimestamps();
     }
-    public function patienttypes()
+    public function types()
     {
-        return $this->belongsToMany(Patient_type::class)->withTimestamps();
+        return $this->belongsToMany(Type::class)->withTimestamps();
     }
 }

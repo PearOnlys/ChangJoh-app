@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DeckResource;
 use App\Http\Resources\ProfileResource;
-use App\Models\Patient_type;
-use App\Models\PatientType;
+use App\Models\Type;
 use App\Models\Profile;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -80,7 +79,7 @@ class ProfileController extends Controller
         } else {
             if (!$request->image) {
                 $profile->fill($request->only('name'));
-                $profile->patient_type_id = $request->type_id;
+                $profile->type_id = $request->type_id;
                 $profile->save();
             } else {
                 $file = $request->file('image');
@@ -88,7 +87,7 @@ class ProfileController extends Controller
                 $profile->fill($request->only('name'));
                 $path = Storage::putFileAs('images/profiles', $file, $filename);
                 $profile->image_path = $path;
-                $profile->patient_type_id = $request->type_id;
+                $profile->type_id = $request->type_id;
                 $profile->save();
             }
             $result['profile'] = new ProfileResource($profile);
@@ -133,11 +132,11 @@ class ProfileController extends Controller
             $profile->fill($request->only(['name']));
             $path = Storage::putFileAs('images/profiles', $file, $filename);
             $profile->image_path = $path;
-            $profile->patient_type_id = $request->type_id;
+            $profile->type_id = $request->type_id;
             $profile->save();
 
             // starter pack //copy deck & deck->card
-            $decks = PatientType::findOrFail($request->type_id)->decks()->get();
+            $decks = Type::findOrFail($request->type_id)->decks()->get();
             foreach ($decks as $deck) {
                 $card_ordering = 0;
                 $newdeck = $deck->replicate();

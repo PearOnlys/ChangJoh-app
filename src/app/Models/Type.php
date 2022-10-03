@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PatientType extends Model
+class Type extends Model
 {
     use HasFactory, SoftDeletes;
     /**
@@ -19,7 +19,7 @@ class PatientType extends Model
     ];
 
     static $rules = [
-        'name' => 'required|unique:patient_types,name|max:255',
+        'name' => 'required|unique:types,name|max:255',
     ];
 
     static $msg = [

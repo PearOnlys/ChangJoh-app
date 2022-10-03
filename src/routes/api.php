@@ -4,9 +4,9 @@ use App\Http\Controllers\CardController;
 use App\Http\Controllers\CardDeckController;
 use App\Http\Controllers\DeckController;
 use App\Http\Controllers\DeckProfileController;
-use App\Http\Controllers\PatienttypeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\TypeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,8 +25,8 @@ Route::post('register', [SessionController::class, 'register']);
 Route::post('login', [SessionController::class, 'login'])->middleware('guest');
 Route::get('logout', [SessionController::class, 'logout'])->middleware('auth:api');
 
-Route::get('type', [PatienttypeController::class, 'index']);
-Route::post('type', [PatienttypeController::class, 'store']);
+Route::get('type', [TypeController::class, 'index']);
+Route::post('type', [TypeController::class, 'store']);
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'user'], function () {

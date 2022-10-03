@@ -4,8 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\Deck;
-use App\Models\Patienttype;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\App;
 
@@ -19,14 +17,15 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         \App\Models\User::factory(1)->create();
-        \App\Models\Patient_type::factory(10)->create();
+
+        \App\Models\Type::factory(10)->create();
         \App\Models\Card::factory(20)->create();
         \App\Models\Deck::factory(10)->create();
 
-        //pivot deck_patienttype
-        $types = \App\Models\Patient_type::all();
+        //pivot deck_type
+        $types = \App\Models\Type::all();
         \App\Models\Deck::all()->each(function ($deck) use ($types){
-            $deck->patienttypes()->attach(
+            $deck->types()->attach(
                 $types->random(rand(1,3))->pluck('id')->toArray()
             );
         });
